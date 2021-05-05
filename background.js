@@ -1,5 +1,6 @@
 // Version 1 (add FocusListener on onCreated and remove it directly after resizing once)
-function focusListener(windowId) {
+// DOESN'T WORK AFTER SERVICE WORKER GOES INACTIVE
+/* function focusListener(windowId) {
     if (windowId > 0) {
         chrome.windows.get(windowId).then(window => {
             if (window.type === 'normal') {
@@ -12,10 +13,13 @@ function focusListener(windowId) {
 
 chrome.windows.onCreated.addListener(() => {
     chrome.windows.onFocusChanged.addListener(focusListener);
-});
+}); */
 
-// Version 2 (Check on every resize with a map of already resized windowIds)
-/* let didMax = [];
+// Version 2 //
+// Check on every focus change.
+// Resize every window only once by keeping track of already resized windowIds
+// windowIds are unique per browser session
+let didMax = [];
 
 chrome.windows.onFocusChanged.addListener(windowId => {
     if (windowId > 0 && !didMax[windowId]) {
@@ -26,4 +30,4 @@ chrome.windows.onFocusChanged.addListener(windowId => {
             }
         });
     }
-}); */
+});
