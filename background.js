@@ -19,15 +19,19 @@ chrome.windows.onCreated.addListener(() => {
 // Check on every focus change.
 // Resize every window only once by keeping track of already resized windowIds
 // windowIds are unique per browser session
-let didMax = [];
-
-chrome.windows.onFocusChanged.addListener(windowId => {
-    if (windowId > 0 && !didMax[windowId]) {
-        chrome.windows.get(windowId).then(window => {
+chrome.windows.onFocusChanged.addListener(async windowId => {
+    if (windowId > 0) {
+        let wasMaxed = await chrome.storage.local.get('w' + windowId);
+        if (!wasMaxed) {
+            let window = await chrome.windows.get(windowId);
             if (window.type === 'normal') {
                 chrome.windows.update(windowId, { state: 'maximized' });
-                didMax[windowId] = true;
+                await chrome.storage.local.set({ ['w' + windowId]: true });
             }
-        });
+        }
     }
+});
+
+chrome.windows.onRemoved.addListener(async windowId => {
+    await chrome.storage.local.remove('w' + windowId);
 });
