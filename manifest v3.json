@@ -1,0 +1,10 @@
+{
+    "name": "Vivaldi auto maximize new windows",
+    "description": "Vivaldi auto maximize new windows",
+    "version": "0.1",
+    "manifest_version": 3,
+    "background": {
+        "service_worker": "background.js"
+    },
+    "permissions": ["storage"]
+}
