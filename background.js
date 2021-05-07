@@ -8,10 +8,14 @@ chrome.windows.onFocusChanged.addListener(windowId => {
         const key = 'w' + windowId;
         chrome.storage.local.get(key, wasMaxed => {
             if (!wasMaxed || !wasMaxed[key]) {
-                chrome.windows.update(windowId, { state: 'maximized' }, () => {
-                    chrome.storage.local.set({ [key]: true }, () => {
-                        /* Empty callback function, because wtf */
-                    });
+                chrome.windows.get(windowId, window => {
+                    if (window.type === 'normal') {
+                        chrome.windows.update(windowId, { state: 'maximized' }, () => {
+                            chrome.storage.local.set({ [key]: true }, () => {
+                                /* Empty callback function, because wtf */
+                            });
+                        });
+                    }
                 });
             }
         });
